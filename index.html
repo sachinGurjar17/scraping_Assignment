@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Twitter Trending Topics</title>
+</head>
+<body>
+    <h1>Fetch Twitter Trending Topics</h1>
+    <button id="runScript" onclick="fetchTrends()">Fetch Trends</button>
+    <div id="results"></div>
+
+    <script>
+        async function fetchTrends() {
+            const response = await fetch('/run-script', { method: 'POST' });
+            const data = await response.json();
+            const resultsDiv = document.getElementById("results");
+
+            if (data.success) {
+                const trends = data.trends;
+                resultsDiv.innerHTML = `
+                    <h2>Top 5 Trends:</h2>
+                    <ol>
+                        ${trends.map(trend => `<li>${trend}</li>`).join("")}
+                    </ol>
+                    <p>Script Run ID: ${data.unique_id}</p>
+                    <p>IP Address: ${data.ip_address}</p>
+                    <p>Date and Time: ${data.date_time}</p>
+                `;
+            } else {
+                resultsDiv.innerHTML = `<p>Error: ${data.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
